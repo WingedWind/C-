@@ -34,11 +34,11 @@ namespace caches {
         const int hirsize = (size_ + 3) / 4;    //Equating hirsize to a quarter of the total cache size with rounding up.
         const int lirsize = size_ - hirsize;     //Equating lirsize to to the remaining space in the cache (about three-quarters of it).
 
-        bool fool_list (int len_list) const {
+        bool full_list (int len_list) const {
             return (len_list == hirsize);
         }
 
-        bool fool_Lir(int len_stack) const {
+        bool full_Lir(int len_stack) const {
             return (len_stack >= lirsize);
         }
 
@@ -66,7 +66,7 @@ namespace caches {
 
             if (hash_element == hash_.end() || (hash_element->second.first == list_.end() && hash_element->second.second == stack_.end())) {                             //новый элемент
                 
-                if (fool_list(list_.size())) {
+                if (full_list(list_.size())) {
 
                     stack_.push_front({Resident_HIR, key});
                     list_.push_front(key);
@@ -87,7 +87,7 @@ namespace caches {
                 }
                 else {
 
-                    if (!fool_Lir(stack_.size())) {
+                    if (!full_Lir(stack_.size())) {
                         stack_.push_front({LIR, key});
                         hash_.insert_or_assign(key, std::make_pair(list_.end(), stack_.begin()));
                     }
