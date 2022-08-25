@@ -10,9 +10,9 @@ int slow_get_page_int(int key) {                // slow get page imitation
 
 int main() {
 
-    int cache_size = 0;
-    int num_count = 0;
-    int hits = 0;
+    unsigned cache_size = 0;
+    unsigned num_count = 0;
+    unsigned hits = 0;
 
     std::cin >> cache_size >> num_count;
     assert(std::cin.good());
