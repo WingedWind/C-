@@ -28,7 +28,7 @@ namespace caches {
 
             void fill() {
 
-                for (int i = 0; i < num_count_; ++i) {
+                for (unsigned i = 0; i < num_count_; ++i) {
                     int num;
                     std::cin >> num;
                     assert(std::cin.good());
@@ -42,7 +42,7 @@ namespace caches {
 
                 unsigned hits = 0;
 
-                for (int i = 0; i < num_count_; ++i) {
+                for (unsigned i = 0; i < num_count_; ++i) {
                     
                     auto key = keys_[i];
 

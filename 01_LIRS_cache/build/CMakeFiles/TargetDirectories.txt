@@ -1,0 +1,3 @@
+/home/anastasiya/Рабочий стол/Slab/01_LIRS_cache/build/CMakeFiles/rebuild_cache.dir
+/home/anastasiya/Рабочий стол/Slab/01_LIRS_cache/build/CMakeFiles/edit_cache.dir
+/home/anastasiya/Рабочий стол/Slab/01_LIRS_cache/build/CMakeFiles/belady.dir

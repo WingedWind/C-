@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 
-#include "cache.hpp"
+#include "belady.hpp"
 
 int slow_get_page_int(int key) {                // slow get page imitation
     
@@ -17,17 +17,10 @@ int main() {
     std::cin >> cache_size >> num_count;
     assert(std::cin.good());
 
-    caches::cache <int> cache{cache_size};
+    caches::prescient <int> cache{cache_size, num_count}; 
 
-    for (int i = 0; i < num_count; ++i) {
-        int num;
-        std::cin >> num;
-        assert(std::cin.good());
-
-        if (cache.Lirs_algoritm(num, slow_get_page_int)) {
-            hits += 1;
-        }
-    }
+    cache.fill();
+    hits = cache.prescient_algoritm(slow_get_page_int);
 
     std::cout << hits << std::endl;
 
