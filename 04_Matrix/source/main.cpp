@@ -10,6 +10,8 @@ int main() {
     long long res = 0;
 
     std::cin >> m;
+
+    assert(std::cin.good());
     
     n = m;
 

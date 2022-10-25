@@ -124,6 +124,7 @@ namespace matrix {
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
                         std::cin >> matrix_[i][j];
+                        assert(std::cin.good());
                     }
                 }
             }
