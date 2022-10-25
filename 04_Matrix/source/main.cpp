@@ -16,7 +16,7 @@ int main() {
     n = m;
 
     matrix::matrix <double> matrix{m, n};
-    matrix.imput_matrix();
+    matrix.input_matrix();
 
     res = matrix.gauss_jordan();
     std::cout << res << std::endl;

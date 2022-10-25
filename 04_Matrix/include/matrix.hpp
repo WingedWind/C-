@@ -72,8 +72,8 @@ namespace matrix {
                     return *this;
                 }
 
-                m_ = rhs.m_;
-                n_ = rhs.n_;
+                std::swap(m_, rhs.m_);
+                std::swap(n_, rhs.n_);
                 std::swap(matrix_, rhs.matrix_);
 
                 return *this;
@@ -95,15 +95,57 @@ namespace matrix {
                 return tmp;
             }
 
+            matrix operator- (const matrix<Type> &tmp) {
+                
+                if (tmp.m_ != m_ || tmp.n_ != n_) {
+                    assert(tmp.m_ != m_ || tmp.n_ != n_);
+                }
+
+                matrix result{m_, n_};
+
+                for (int i = 0; i < m_; ++i) {
+                    for (int j = 0; j < n_; ++j) {
+                        result.matrix_[i][j] = matrix_[i][j] - tmp.matrix_[i][j];
+                    }
+                }
+
+                return result;
+            }
+
+            matrix operator+ (const matrix<Type> &tmp) {
+                
+                if (tmp.m_ != m_ || tmp.n_ != n_) {
+                    assert(tmp.m_ != m_ || tmp.n_ != n_);
+                }
+
+                matrix result{m_, n_};
+
+                for (int i = 0; i < m_; ++i) {
+                    for (int j = 0; j < n_; ++j) {
+                        result.matrix_[i][j] = matrix_[i][j] + tmp.matrix_[i][j];
+                    }
+                }
+
+                return result;
+            }
+
+            matrix operator- () {
+
+                matrix result{m_, n_};
+
+                for (int i = 0; i < m_; ++i) {
+                    for (int j = 0; j < n_; ++j) {
+                        result.matrix_[i][j] = matrix_[i][j] * -1;
+                    }
+                }
+                return result;
+            }
+
             void create_matrix() {
                 
                 matrix_ = new Type*[m_]; 
                 for (int i = 0; i < m_; ++i) {
-                    matrix_[i] = new Type[n_];
-
-                    for (int j = 0; j < n_; ++j) {
-                        matrix_[i][j] = 0;
-                    }
+                    matrix_[i] = new Type[n_] {};
                 }
             }
 
@@ -114,13 +156,11 @@ namespace matrix {
                 }
 
                 for (int i = 0; i < m_; ++i) {
-                    for (int j = 0; j < n_; ++j) {
-                        matrix_[i][j] = matrix.matrix_[i][j];
-                    }
+                    std::copy(matrix.matrix_[i], matrix.matrix_[i] + n_, matrix_[i]);
                 }
             }
 
-            void imput_matrix() {
+            void input_matrix() {
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
                         std::cin >> matrix_[i][j];
