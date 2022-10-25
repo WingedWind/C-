@@ -67,7 +67,7 @@ namespace matrix {
                 return *this;
             }
 
-            matrix operator= (matrix &&rhs) {
+            matrix operator= (matrix &&rhs) noexcept {
                 if (this == &rhs) {
                     return *this;
                 }
