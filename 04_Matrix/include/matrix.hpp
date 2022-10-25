@@ -233,11 +233,11 @@ namespace matrix {
                         matrix_[line][j] = change;
                     }
                 }
-                
+
                 return 0;
             }
 
-            long long determinant (int &flag) {
+            Type determinant (int &flag) {
                 
                 Type res = 1;
                 
@@ -247,13 +247,12 @@ namespace matrix {
 
                 res *= flag;
                 if (res >= 0) {
-                    return (long long) (res + EPSILON);
+                    return res + EPSILON;
                 }
-
-                return (long long) (res - EPSILON);
+                return res - EPSILON;
             }
 
-            int gauss_jordan() {
+            Type gauss_jordan() {
                 
                 int start = 0, flag = 1;
 
@@ -263,6 +262,7 @@ namespace matrix {
                     }
                     zero_column(start);
                 }
+                
                 return determinant(flag);
             }
 
@@ -272,7 +272,7 @@ namespace matrix {
 
             void print_matrix() {
                 
-                std::cout << "Start of the matrix " << std::endl;
+                std::cout << "\nStart of the matrix " << std::endl;
 
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
@@ -282,7 +282,7 @@ namespace matrix {
                     std::cout << std::endl;
                 }
 
-                std::cout << "End of the matrix" << std::endl;
+                std::cout << "End of the matrix\n\n" << std::endl;
             }
 //---------------------------------------------------------------------------------------------//
     };
