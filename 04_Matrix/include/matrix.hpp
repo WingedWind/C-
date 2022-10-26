@@ -263,7 +263,7 @@ namespace matrix {
                     zero_column(start);
                 }
                 
-                return determinant(flag);
+                return round(determinant(flag));
             }
 
 //---------------------------------------------------------------------------------------------//
@@ -272,7 +272,7 @@ namespace matrix {
 
             void print_matrix() {
                 
-                std::cout << "\nStart of the matrix " << std::endl;
+                std::cout << "Start of the matrix " << std::endl;
 
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
@@ -282,8 +282,19 @@ namespace matrix {
                     std::cout << std::endl;
                 }
 
-                std::cout << "End of the matrix\n\n" << std::endl;
+                std::cout << "End of the matrix\n" << std::endl;
             }
 //---------------------------------------------------------------------------------------------//
     };
+}
+
+void imput_size(int &size) {
+
+    std::cin >> size;
+    assert(std::cin.good());
+
+    if (size == 0) {
+        std::cout << "You have entered a matrix of zero size" << std::endl;
+        assert(size == 0);
+    }
 }
