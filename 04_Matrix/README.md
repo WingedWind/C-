@@ -10,4 +10,6 @@
 ---
 ## Compiler settings:
 
-A file 'matrix' will appear executing a program LIRS cache
+A file 'matrix' will appear, which calculates the determinant
+
+A file 'unit_tests' will appear, which runs the unit test algorithm
