@@ -271,8 +271,6 @@ namespace matrix {
 //---------------------------------------debug functions---------------------------------------//
 
             void print_matrix() {
-                
-                std::cout << "Start of the matrix " << std::endl;
 
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
@@ -282,7 +280,7 @@ namespace matrix {
                     std::cout << std::endl;
                 }
 
-                std::cout << "End of the matrix\n" << std::endl;
+                std::cout << std::endl;
             }
 //---------------------------------------------------------------------------------------------//
     };

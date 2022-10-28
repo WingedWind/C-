@@ -1,27 +1,34 @@
-cmake_minimum_required (VERSION 3.16)
-project ("LIRS CACHE" VERSION 1.0.0) 
+cmake_minimum_required(VERSION 3.16)
 
-set (EXEC_FILE "matrix")
+project(matrix)
 
-set (INCLUDE 
+set(CMAKE_CXX_STANDARD 17)
 
-    include
+# collecting libs
+add_subdirectory(source)
+
+# common includes
+foreach(LIB ${LIBLIST})
+  target_include_directories(${LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+endforeach()
+
+
+
+set(SRCS_MATRIX
+  source/Matrix/main.cpp
 )
 
-set (SOURCES 
+add_executable(matrix ${SRCS_MATRIX})
 
-    source/main.cpp
+target_include_directories(matrix PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+target_link_libraries (matrix ${LIBLIST})
+
+
+set(SRCS_UNIT_TESTS
+  source/Unit_tests/unit_tests.cpp
 )
 
-add_executable (${EXEC_FILE} ${SOURCES})
-target_include_directories (${EXEC_FILE} PRIVATE ${INCLUDE})
+add_executable(unit_tests ${SRCS_UNIT_TESTS})
 
-set (COMPILE_SETTINGS
-
-    -Wall
-    -Wextra
-    -Wpedantic
-    -O2
-)
-
-target_compile_options (${EXEC_FILE} PRIVATE ${COMPILE_SETTINGS})
+target_include_directories(unit_tests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+target_link_libraries (unit_tests ${LIBLIST})
