@@ -98,7 +98,7 @@ namespace matrix {
             matrix operator- (const matrix<Type> &tmp) {
                 
                 if (tmp.m_ != m_ || tmp.n_ != n_) {
-                    assert(tmp.m_ != m_ || tmp.n_ != n_);
+                    assert(tmp.m_ == m_ && tmp.n_ == n_);
                 }
 
                 matrix result{m_, n_};
@@ -115,7 +115,7 @@ namespace matrix {
             matrix operator+ (const matrix<Type> &tmp) {
                 
                 if (tmp.m_ != m_ || tmp.n_ != n_) {
-                    assert(tmp.m_ != m_ || tmp.n_ != n_);
+                    assert(tmp.m_ == m_ && tmp.n_ == n_);
                 }
 
                 matrix result{m_, n_};
@@ -152,7 +152,7 @@ namespace matrix {
             void copy_matrix(const matrix<Type> &matrix) {
 
                 if (matrix.m_ != m_ || matrix.n_ != n_) {
-                    assert(matrix.m_ != m_ || matrix.n_ != n_);
+                    assert(matrix.m_ == m_ && matrix.n_ == n_);
                 }
 
                 for (int i = 0; i < m_; ++i) {
@@ -293,6 +293,6 @@ void imput_size(int &size) {
 
     if (size == 0) {
         std::cout << "You have entered a matrix of zero size" << std::endl;
-        assert(size == 0);
+        assert(size != 0);
     }
 }
