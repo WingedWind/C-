@@ -95,7 +95,7 @@ namespace matrix {
                 return tmp;
             }
 
-            matrix operator- (const matrix<Type> &tmp) {
+            matrix operator- (const matrix<Type> &tmp) const {
                 
                 if (tmp.m_ != m_ || tmp.n_ != n_) {
                     assert(tmp.m_ == m_ && tmp.n_ == n_);
@@ -112,7 +112,7 @@ namespace matrix {
                 return result;
             }
 
-            matrix operator+ (const matrix<Type> &tmp) {
+            matrix operator+ (const matrix<Type> &tmp) const {
                 
                 if (tmp.m_ != m_ || tmp.n_ != n_) {
                     assert(tmp.m_ == m_ && tmp.n_ == n_);
@@ -129,7 +129,7 @@ namespace matrix {
                 return result;
             }
 
-            matrix operator- () {
+            matrix operator- () const {
 
                 matrix result{m_, n_};
 
@@ -149,7 +149,20 @@ namespace matrix {
                 }
             }
 
-            void copy_matrix(const matrix<Type> &matrix) {
+            matrix<double> copy_to_double() const {
+
+                matrix<double> res{m_, n_};
+
+                for (int i = 0; i < m_; ++i) {
+                    for (int j = 0; j < n_; ++j) {
+                        res[i][j] = static_cast<double>(matrix_[i][j]);
+                    }
+                }
+
+                return res;
+            }
+
+            void copy_matrix(const matrix<Type> &matrix) const {
 
                 if (matrix.m_ != m_ || matrix.n_ != n_) {
                     assert(matrix.m_ == m_ && matrix.n_ == n_);
@@ -170,6 +183,7 @@ namespace matrix {
             }
 
 //------------------------------------------algorithm------------------------------------------//
+        private:
 
             void zero_column (int &start) {
                 Type num = matrix_[start][start];
@@ -237,9 +251,9 @@ namespace matrix {
                 return 0;
             }
 
-            Type determinant (int &flag) {
+            double determinant (int &flag) {
                 
-                Type res = 1;
+                double res = 1;
                 
                 for (int i = 0; i < m_; ++i) {
                     res *= matrix_[i][i];
@@ -252,8 +266,14 @@ namespace matrix {
                 return res - EPSILON;
             }
 
-            Type gauss_jordan() {
+        public:
+
+            double gauss_jordan_for_double() {
                 
+                if (m_ != n_) {
+                    assert(m_ == n_);
+                }
+
                 int start = 0, flag = 1;
 
                 for (int i = 0; i < m_; ++i) {
@@ -266,11 +286,22 @@ namespace matrix {
                 return round(determinant(flag));
             }
 
-//---------------------------------------------------------------------------------------------//
+            double gauss_jordan() {
 
+                if (typeid(double) == typeid(Type)) {
+                    return gauss_jordan_for_double();
+                }
+
+                matrix <double> matrix_double{m_, n_};
+                matrix_double = copy_to_double();
+
+                return matrix_double.gauss_jordan_for_double();
+            }
+
+//---------------------------------------------------------------------------------------------//
 //---------------------------------------debug functions---------------------------------------//
 
-            void print_matrix() {
+            void print_matrix() const{
 
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
@@ -286,7 +317,7 @@ namespace matrix {
     };
 }
 
-void imput_size(int &size) {
+inline void input_size(int &size) {
 
     std::cin >> size;
     assert(std::cin.good());

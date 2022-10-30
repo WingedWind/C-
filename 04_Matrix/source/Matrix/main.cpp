@@ -8,7 +8,7 @@ int main() {
     int m = 0;
     int n = 0;
 
-    imput_size(m);
+    input_size(m);
     
     n = m;
 
