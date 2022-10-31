@@ -89,6 +89,36 @@ namespace matrix {
 
 //---------------------------------------------------------------------------------------------//
 
+//----------------------------------overload for another type----------------------------------//    
+            
+            template <typename U> matrix(const matrix<U> &rhs): m_(rhs.height()), n_(rhs.width()) {
+                
+                create_matrix();
+                copy_matrix_different_t(rhs);
+            }
+
+            template <typename U> matrix operator= (const matrix<U> &rhs) {
+                
+                if (typeid(*this) == typeid(rhs)) {
+                    return *this;
+                }
+                
+                for (int i = 0; i < m_; ++i) {
+                    delete [] matrix_[i];
+                }
+                delete [] matrix_;
+                
+                n_ = rhs.width();
+                m_ = rhs.height();
+
+                create_matrix();
+                copy_matrix_different_t(rhs);
+
+                return *this;
+            }
+
+//---------------------------------------------------------------------------------------------//
+
             ProxyRow operator[] (int m) const {
                 
                 ProxyRow tmp {matrix_[m]};
@@ -149,19 +179,6 @@ namespace matrix {
                 }
             }
 
-            matrix<double> copy_to_double() const {
-
-                matrix<double> res{m_, n_};
-
-                for (int i = 0; i < m_; ++i) {
-                    for (int j = 0; j < n_; ++j) {
-                        res[i][j] = static_cast<double>(matrix_[i][j]);
-                    }
-                }
-
-                return res;
-            }
-
             void copy_matrix(const matrix<Type> &matrix) const {
 
                 if (matrix.m_ != m_ || matrix.n_ != n_) {
@@ -173,6 +190,19 @@ namespace matrix {
                 }
             }
 
+            template <typename U> void copy_matrix_different_t(const matrix<U> &matrix) const {
+
+                if (matrix.width() != m_ || matrix.height() != n_) {
+                    assert(matrix.width() == m_ && matrix.height() == n_);
+                }
+
+                for (int i = 0; i < m_; ++i) {
+                    for (int j = 0; j < n_; ++j) {
+                        matrix_[i][j] = static_cast<Type>(matrix[i][j]);
+                    }
+                }
+            }
+
             void input_matrix() {
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
@@ -180,6 +210,14 @@ namespace matrix {
                         assert(std::cin.good());
                     }
                 }
+            }
+
+            int height() const{
+                return m_;
+            }
+
+            int width() const{
+                return n_;
             }
 
 //------------------------------------------algorithm------------------------------------------//
@@ -292,8 +330,7 @@ namespace matrix {
                     return gauss_jordan_for_double();
                 }
 
-                matrix <double> matrix_double{m_, n_};
-                matrix_double = copy_to_double();
+                matrix <double> matrix_double = *this;
 
                 return matrix_double.gauss_jordan_for_double();
             }
