@@ -37,7 +37,6 @@ namespace matrix {
 //-----------------------------------------rule of five----------------------------------------//
 
             matrix(const matrix &rhs): m_(rhs.m_), n_(rhs.n_) {
-                
                 create_matrix();
                 copy_matrix(rhs);
             }
@@ -89,8 +88,7 @@ namespace matrix {
 
 //---------------------------------------------------------------------------------------------//
 
-//----------------------------------overload for another type----------------------------------//    
-            
+//--------------------------------overload five for another type-------------------------------//    
             template <typename U> matrix(const matrix<U> &rhs): m_(rhs.height()), n_(rhs.width()) {
                 
                 create_matrix();
@@ -99,7 +97,7 @@ namespace matrix {
 
             template <typename U> matrix operator= (const matrix<U> &rhs) {
                 
-                if (typeid(*this) == typeid(rhs)) {
+                if (this == &rhs) {
                     return *this;
                 }
                 
@@ -109,13 +107,14 @@ namespace matrix {
                 delete [] matrix_;
                 
                 n_ = rhs.width();
-                m_ = rhs.height();
+                m_ = rhs.hight();
 
                 create_matrix();
                 copy_matrix_different_t(rhs);
 
                 return *this;
             }
+
 
 //---------------------------------------------------------------------------------------------//
 
@@ -125,38 +124,34 @@ namespace matrix {
                 return tmp;
             }
 
-            matrix operator- (const matrix<Type> &tmp) const {
-                
+            matrix &operator+= (const matrix<Type> &tmp) {
+
                 if (tmp.m_ != m_ || tmp.n_ != n_) {
                     assert(tmp.m_ == m_ && tmp.n_ == n_);
                 }
 
-                matrix result{m_, n_};
-
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
-                        result.matrix_[i][j] = matrix_[i][j] - tmp.matrix_[i][j];
+                        matrix_[i][j] = matrix_[i][j] + tmp.matrix_[i][j];
                     }
                 }
 
-                return result;
+                return *this;
             }
 
-            matrix operator+ (const matrix<Type> &tmp) const {
-                
+            matrix &operator-= (const matrix<Type> &tmp) {
+
                 if (tmp.m_ != m_ || tmp.n_ != n_) {
                     assert(tmp.m_ == m_ && tmp.n_ == n_);
                 }
 
-                matrix result{m_, n_};
-
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
-                        result.matrix_[i][j] = matrix_[i][j] + tmp.matrix_[i][j];
+                        matrix_[i][j] = matrix_[i][j] - tmp.matrix_[i][j];
                     }
                 }
 
-                return result;
+                return *this;
             }
 
             matrix operator- () const {
@@ -352,6 +347,30 @@ namespace matrix {
             }
 //---------------------------------------------------------------------------------------------//
     };
+
+    template <typename Type> matrix<Type> operator- (const matrix<Type> &lhs, const matrix<Type> &rhs){
+    
+        if (lhs.width() != rhs.width() || lhs.height() != rhs.height()) {
+            assert(lhs.width() == rhs.width() && lhs.height() == rhs.height());
+        }
+
+        matrix result = lhs;
+        result -= rhs;
+
+        return result;
+    }
+
+    template <typename Type> matrix<Type> operator+ (const matrix<Type> &lhs, const matrix<Type> &rhs) {
+        
+        if (lhs.width() != rhs.width() || lhs.height() != rhs.height()) {
+            assert(lhs.width() == rhs.width() && lhs.height() == rhs.height());
+        }
+
+        matrix result = lhs;
+        result += rhs;
+
+        return result;
+    }
 }
 
 inline void input_size(int &size) {
