@@ -14,7 +14,7 @@ namespace matrix {
             int n_;
             Type **matrix_;
             
-            struct  ProxyRow {
+            struct ProxyRow {
                 Type *row;
                 
                 Type &operator[](int n) {
@@ -27,10 +27,21 @@ namespace matrix {
 
             const double EPSILON = 10E-3;
             
+            void create_matrix() {
+                
+                matrix_ = new Type*[m_]; 
+                assert (matrix_ != nullptr);
+                for (int i = 0; i < m_; ++i) {
+                    matrix_[i] = new Type[n_] {};
+                    assert (matrix_[i] != nullptr);
+                }
+            }
         
         public:
             
             matrix(int m, int n): m_(m), n_(n) {
+
+                assert(m > 0 && n > 0);
                 create_matrix();
             }
 
@@ -42,7 +53,10 @@ namespace matrix {
             }
 
             matrix( matrix &&rhs) noexcept: m_(rhs.m_), n_(rhs.n_), matrix_(rhs.matrix_) {
+                
                 rhs.matrix_ = nullptr;
+                rhs.m_ = 0;
+                rhs.n_ = 0;
             }
 
 
@@ -92,7 +106,7 @@ namespace matrix {
             template <typename U> matrix(const matrix<U> &rhs): m_(rhs.height()), n_(rhs.width()) {
                 
                 create_matrix();
-                copy_matrix_different_t(rhs);
+                copy_matrix(rhs);
             }
 
             template <typename U> matrix operator= (const matrix<U> &rhs) {
@@ -110,7 +124,7 @@ namespace matrix {
                 m_ = rhs.hight();
 
                 create_matrix();
-                copy_matrix_different_t(rhs);
+                copy_matrix(rhs);
 
                 return *this;
             }
@@ -126,9 +140,7 @@ namespace matrix {
 
             matrix &operator+= (const matrix<Type> &tmp) {
 
-                if (tmp.m_ != m_ || tmp.n_ != n_) {
-                    assert(tmp.m_ == m_ && tmp.n_ == n_);
-                }
+                assert(tmp.m_ == m_ && tmp.n_ == n_);
 
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
@@ -141,10 +153,8 @@ namespace matrix {
 
             matrix &operator-= (const matrix<Type> &tmp) {
 
-                if (tmp.m_ != m_ || tmp.n_ != n_) {
-                    assert(tmp.m_ == m_ && tmp.n_ == n_);
-                }
-
+                assert(tmp.m_ == m_ && tmp.n_ == n_);
+                
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
                         matrix_[i][j] = matrix_[i][j] - tmp.matrix_[i][j];
@@ -166,35 +176,16 @@ namespace matrix {
                 return result;
             }
 
-            void create_matrix() {
-                
-                matrix_ = new Type*[m_]; 
-                for (int i = 0; i < m_; ++i) {
-                    matrix_[i] = new Type[n_] {};
-                }
+            Type *return_it_elem(int n) const{
+                return matrix_[n];
             }
 
-            void copy_matrix(const matrix<Type> &matrix) const {
+            template <typename U> void copy_matrix(const matrix<U> &matrix) const {
 
-                if (matrix.m_ != m_ || matrix.n_ != n_) {
-                    assert(matrix.m_ == m_ && matrix.n_ == n_);
-                }
+                assert(matrix.width() == m_ && matrix.height() == n_);
 
                 for (int i = 0; i < m_; ++i) {
-                    std::copy(matrix.matrix_[i], matrix.matrix_[i] + n_, matrix_[i]);
-                }
-            }
-
-            template <typename U> void copy_matrix_different_t(const matrix<U> &matrix) const {
-
-                if (matrix.width() != m_ || matrix.height() != n_) {
-                    assert(matrix.width() == m_ && matrix.height() == n_);
-                }
-
-                for (int i = 0; i < m_; ++i) {
-                    for (int j = 0; j < n_; ++j) {
-                        matrix_[i][j] = static_cast<Type>(matrix[i][j]);
-                    }
+                    std::copy(matrix.return_it_elem(i), matrix.return_it_elem(i) + n_, matrix_[i]);
                 }
             }
 
@@ -264,9 +255,7 @@ namespace matrix {
                     flag *= -1;
                     
                     for (int i = 0; i < m_; ++i) {
-                        change = matrix_[i][start];
-                        matrix_[i][start] = matrix_[i][column];
-                        matrix_[i][column] = change;
+                        std::swap(matrix_[i][start], matrix_[i][column]);
                     }
                 }
 
@@ -275,9 +264,7 @@ namespace matrix {
                     flag *= -1;
                     
                     for (int j = 0; j < m_; ++j) {
-                        change = matrix_[start][j];
-                        matrix_[start][j] = matrix_[line][j];
-                        matrix_[line][j] = change;
+                        std::swap(matrix_[start][j], matrix_[line][j]);
                     }
                 }
 
@@ -303,9 +290,7 @@ namespace matrix {
 
             double gauss_jordan_for_double() {
                 
-                if (m_ != n_) {
-                    assert(m_ == n_);
-                }
+                assert(m_ == n_);
 
                 int start = 0, flag = 1;
 
@@ -321,7 +306,7 @@ namespace matrix {
 
             double gauss_jordan() {
 
-                if (typeid(double) == typeid(Type)) {
+                if (std::is_same_v<Type, double>) {
                     return gauss_jordan_for_double();
                 }
 
@@ -350,9 +335,7 @@ namespace matrix {
 
     template <typename Type> matrix<Type> operator- (const matrix<Type> &lhs, const matrix<Type> &rhs){
     
-        if (lhs.width() != rhs.width() || lhs.height() != rhs.height()) {
-            assert(lhs.width() == rhs.width() && lhs.height() == rhs.height());
-        }
+        assert(lhs.width() == rhs.width() && lhs.height() == rhs.height());
 
         matrix result = lhs;
         result -= rhs;
@@ -362,9 +345,7 @@ namespace matrix {
 
     template <typename Type> matrix<Type> operator+ (const matrix<Type> &lhs, const matrix<Type> &rhs) {
         
-        if (lhs.width() != rhs.width() || lhs.height() != rhs.height()) {
-            assert(lhs.width() == rhs.width() && lhs.height() == rhs.height());
-        }
+        assert(lhs.width() == rhs.width() && lhs.height() == rhs.height());
 
         matrix result = lhs;
         result += rhs;
@@ -373,8 +354,9 @@ namespace matrix {
     }
 }
 
-inline void input_size(int &size) {
+inline int input_size() {
 
+    int size = 0;
     std::cin >> size;
     assert(std::cin.good());
 
@@ -382,4 +364,6 @@ inline void input_size(int &size) {
         std::cout << "You have entered a matrix of zero size" << std::endl;
         assert(size != 0);
     }
+
+    return size;
 }

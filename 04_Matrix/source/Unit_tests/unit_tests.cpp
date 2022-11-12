@@ -8,8 +8,8 @@ int main() {
     int m = 0;
     int n = 0;
 
-    input_size(m);
-    input_size(n);
+    m = input_size();
+    n = input_size();
 
     matrix::matrix <double> matrix{m, n};
     matrix::matrix <double> matrix1{m, n};
