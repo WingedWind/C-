@@ -29,10 +29,10 @@ namespace matrix {
             
             void create_matrix() {
                 
-                matrix_ = new Type*[m_]; 
+                matrix_ = new(std::nothrow) Type*[m_]; 
                 assert (matrix_ != nullptr);
                 for (int i = 0; i < m_; ++i) {
-                    matrix_[i] = new Type[n_] {};
+                    matrix_[i] = new(std::nothrow) Type[n_] {};
                     assert (matrix_[i] != nullptr);
                 }
             }
@@ -192,8 +192,12 @@ namespace matrix {
             void input_matrix() {
                 for (int i = 0; i < m_; ++i) {
                     for (int j = 0; j < n_; ++j) {
+                        
                         std::cin >> matrix_[i][j];
                         assert(std::cin.good());
+                        
+                        char next = std::cin.peek();
+                        assert(isblank(next) || next == '\n' || next == '\0');
                     }
                 }
             }
@@ -286,8 +290,6 @@ namespace matrix {
                 return res - EPSILON;
             }
 
-        public:
-
             double gauss_jordan_for_double() {
                 
                 assert(m_ == n_);
@@ -303,6 +305,8 @@ namespace matrix {
                 
                 return round(determinant(flag));
             }
+
+        public:
 
             double gauss_jordan() {
 
@@ -359,6 +363,9 @@ inline int input_size() {
     int size = 0;
     std::cin >> size;
     assert(std::cin.good());
+    char next = std::cin.peek();
+
+    assert(isblank(next) || next == '\n' || next == '\0');
 
     if (size == 0) {
         std::cout << "You have entered a matrix of zero size" << std::endl;
