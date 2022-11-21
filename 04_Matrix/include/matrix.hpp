@@ -290,7 +290,7 @@ namespace matrix {
                 return res - EPSILON;
             }
 
-            double gauss_jordan_for_double() {
+            long int gauss_jordan_for_double() {
                 
                 assert(m_ == n_);
 
@@ -308,7 +308,7 @@ namespace matrix {
 
         public:
 
-            double gauss_jordan() {
+             long int gauss_jordan() {
 
                 if (std::is_same_v<Type, double>) {
                     return gauss_jordan_for_double();
